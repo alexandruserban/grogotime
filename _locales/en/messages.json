@@ -1,0 +1,22 @@
+{
+  "startMSG": {
+    "message": "Start"
+  },
+  "pauseMSG": {
+    "message": "Pauza"
+  },  
+  "navigationDescription": {
+    "message": ", requested $NUM$ times.  Loaded in an average of $LOAD$ miliseconds.",
+    "description": "The message posted in the popup for each stored navigation.",
+    "placeholders": {
+      "NUM": {
+        "content": "$1",
+        "example": "4 (The number of times this URL was accessed.)"
+      },
+      "LOAD": {
+        "content": "$2",
+        "example": "12.345 (The average load time in miliseconds.)"
+      }
+    }
+  }
+}

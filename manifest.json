@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "GrogOTime",
+    "description": "Keep track of your time. Make it worth your grog.",
+    "version": "1.21",
+    "default_locale": "en",
+    "permissions": [
+        "tabs",
+        "storage",
+        "unlimitedStorage"
+    ],
+    "icons": { 
+          "16": "icon_16.png",
+          "48": "icon_48.png",
+          "128": "icon_128.png"
+          },
+    "browser_action": {
+        "default_icon": "icon_48.png",
+        "default_popup": "grogotime.html",
+        "default_title": "GrogOTime"
+    },
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    }
+}
