@@ -81,7 +81,6 @@ body{
 #toggl_items li .toggl_action{
 	vertical-align: middle;
     height: 20px;
-    padding-top: 10px;
 }
 #toggl_items li .toggl_action a{
     margin-left: 5px;
@@ -104,7 +103,7 @@ body{
 	width: 160px;
     text-align: center;
 }
-#toggl_items li .toggl_title {
+#toggl_items li .toggl_title, #toggl_items li .toggl_text {
 	width: 200px;
 	overflow: hidden;
 	border-left: 1px dotted #5AD7E8;
@@ -113,12 +112,22 @@ body{
 	padding-right: 5px;
 	height: 30px;
 }
-#toggl_items li .toggl_title textarea {
-	height: 210px;
+
+#toggl_items li .toggl_text {
+    height: 200px;
+    margin-top: 5px;
+    padding: 3px;
+}
+
+#toggl_items li .toggl_text textarea {
+	height: 170px;
 	width: 196px;
 }
 
 .edit_text{
 	overflow: visible!important;
 	height: 100%!important;
+}
+#toggl_empty_item{
+    display: none;
 }

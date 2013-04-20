@@ -8,23 +8,40 @@
     <link href="resources/css/all.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-  <a href="#" id="toggl_close" class="btn btn-danger"><i class="icon-beer"> Grog O'Time</i></a>
-  <ul id="toggl_items">
-  
-  </ul>
-  <div class="clear"></div>
-  <div id="toggl_add_item_container">
-	  <textarea type="text" id="toogl_input_title" ></textarea>
-	  <a href="#"  id="toggl_add_item" class="btn btn-blue" title="Add item"><i class="icon-plus"> Add item</i></a>
-  </div>
-  <div id="xmsgbox" class="hide">
-	<p id="xmsgbox_txt"></p>
-	<a href="#" id="xmsgbox_answer_no">No</a>
-	<a href="#" id="xmsgbox_answer_yes">Yes</a>
-  </div>
-<div id="toggl_empty_item"><!-- class="toggl_item" id="toggl_item_%index%"><div class="toggl_time" id="toggle_time_%index%">&nbsp;&nbsp;</div><div class="toggl_title"  id="toggl_title_%index%">%title%</div><div id="toggl_action_%index%" class="toggl_action"><a href="#" class="icon-play" title="Start"></a><a href="#" class="icon-edit" title="Edit"></a><a href="#" id="toggl_remove_%index%" class="icon-remove-sign" title="Remove" ></a><a href="#" class="icon-briefcase" title="Archive" style="display: none"></a></div>--></div>
-  <script src="jsApi.js"></script>
-  <script src="xmsgbox.js"></script>
-  <script src="grogotime.js"></script>
+      <a href="#" id="toggl_close" class="btn btn-danger"><i class="icon-beer"> Grog O'Time</i></a>
+      <ul id="toggl_items">
+      
+      </ul>
+      <div class="clear"></div>
+      <div id="toggl_add_item_container">
+          <textarea type="text" id="toogl_input_title" ></textarea>
+          <a href="#"  id="toggl_add_item" class="btn btn-blue" title="Add item"><i class="icon-plus"> Add item</i></a>
+      </div>
+      <div id="xmsgbox" class="hide">
+        <p id="xmsgbox_txt"></p>
+        <a href="#" id="xmsgbox_answer_no">No</a>
+        <a href="#" id="xmsgbox_answer_yes">Yes</a>
+      </div>
+        <div id="toggl_empty_item">
+            <li class="toggl_item" id="toggl_item_%index%"> 
+                <div class="toggl_time" id="toggle_time_%index%">&nbsp;&nbsp;</div>
+                <div class="toggl_title"  id="toggl_title_%index%">%title%</div> 
+                <div id="toggl_txt_%index%" class="toggl_text" style="display: none">
+                    <textarea id="toggl_title_edit_%index%">%title%</textarea>
+                    <a style="margin:2px" href="#%index%" title="Save" class="icon-save" id="txt_save_%index%"></a>
+                    <a style="float:right;margin:2px" href="%index%" id="txt_change_cancel_%index%" class="icon-chevron-up" title="Cancel"></a> 
+                </div>
+                <div id="toggl_action_%index%" class="toggl_action"> 
+                    <a href="#" id="toggl_start_%index%" class="icon-play" title="Start"></a> 
+                    <a href="#" id="toggl_edit_%index%" class="icon-edit" title="Edit"></a> 
+                    <a href="#" id="toggl_remove_%index%" class="icon-remove-sign" title="Remove" ></a> 
+                    <a href="#" id="toggl_archive_%index%" class="icon-briefcase" title="Archive" style="display: none"></a> 
+                </div> 
+            </li>
+        </div>
+
+      <script src="jsApi.js"></script>
+      <script src="xmsgbox.js"></script>
+      <script src="grogotime.js"></script>
   </body>
 </html>
