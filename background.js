@@ -24,6 +24,7 @@ function saveToStorage() {
     }
     
     chromelocalStorage.set({timers : {active : newTimers, archived : newArchive}});
+    //chromelocalStorage.set({timers : {active : [], archived : []}});
 }
 
 chrome.extension.onConnect.addListener(function(port) {

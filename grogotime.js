@@ -1,9 +1,14 @@
+/* all timers in this script are created using this function */
 function Timer(init_data) {
     this.data = ['status', 'time', 'index', 'last_time', 'title'];
     this.export_data = {};
+    this.current_time = new Date().getTime()
     
     for(var key in this.data) {
         this[this.data[key]] = init_data[this.data[key]];
+    }
+    if (this.status == 1) {
+        this.time += Math.floor((this.current_time - this.last_time) / 1000);    
     }
     this.play = function () {
         this.status = 1;
@@ -30,12 +35,52 @@ function Timer(init_data) {
         return this.export_data;
     }
 }
-
+/* show elapsed time in a friendly way */
+function convertSeconds(s) {
+  var m = 0;
+  var h = 0;
+  var d = 0;
+  if (s >= 3600 * 24) {
+      d = parseInt(s / (3600 * 24));
+      s = parseInt(s % (3600 * 24));
+  }  
+  if (s >= 3600) {
+      h = parseInt(s / 3600);
+      s = parseInt(s % 3600);
+  }
+  if (s >= 60) {
+      m = parseInt(s / 60);
+      s = parseInt(s % 60);
+  }
+  if (d > 0) {
+    d = (d < 10 ? '0' + d : d) + (d > 1 ? ' days ' : ' day ');
+  }  
+  if (h > 0 || d) {
+    h = (h < 10 ? '0' + h : h) + ' : ';
+  }
+  if (m > 0 || h) {
+    m = (m < 10 ? '0' + m : m) + ' : ';
+  }
+  if (s > 0 || m) {
+    s = s < 10 ? '0' + s : s;
+  }
+  
+  return  (d > 0 || d.length > 0 ? d : '<span class="not_visible">00 days </span>')
+          + (h > 0 || h.length > 0 ? h : '00 : ')
+          + (m > 0 || m.length > 0 ? m : '00 : ')
+          + s;
+}
+/* this will return the template that will be appended to the other items */
 function Template(init_data) {
     var tpl = init_data.tpl.replace(/%index%/g, init_data.index);
+    if (init_data.time && init_data.time > 0) {
+        tpl = tpl.replace(/%time%/g, convertSeconds(init_data.time));
+    } else {
+        tpl = tpl.replace(/%time%/g, '');
+    }
     return tpl.replace(/%title%/g, init_data.title);
 }
-
+/* a timer has these DOM elements that need action binding */
 function _timerDOMElements($, index) {
     this.$item          = $('#toggl_item_' + index);
     this.$time          = $('#toggle_time_' + index);
@@ -51,21 +96,8 @@ function _timerDOMElements($, index) {
     this.$textarea      = $('#toggl_title_edit_' + index);
 }
 
-/*
-function sendMessage(action, data) {
-    switch(action) {
-        case 'play': 
-            chrome.extension.sendMessage('', {to: 'bgTimer', data}); 
-        break;
-        case 'delete': 
-            chrome.extension.sendMessage('', {to: 'bgTimer', data}); 
-        break;
-    }   
-}
-*/
-
-function App($, Timers, Template, xmsgbox, timers) {
-    var App             = this;
+function App($, _$, xmsgbox, timers) {
+    /* the Array of DOM elements of each timer */
     var timer_DOM_elements = [];
     var $items          = $('toggl_items');
     var $add_item       = $('toggl_add_item');
@@ -74,15 +106,17 @@ function App($, Timers, Template, xmsgbox, timers) {
     var $closeToggl = $('toggl_close');
     var new_item_html   = $('toggl_empty_item').html();
     
+    /* close app window */
     $closeToggl.on('click', function (e) {
         window.close();
     });
     
+    /* add new item in app (an item is called a timer)*/
     $add_item.on('click', function (e)
         {
             var index = parseInt(_$.array.lastIndex(timers)) + 1;
             var title = $add_title.val();
-            var tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : title});
+            var tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : title, 'time' : 0});
             
             $items.append(tpl);
             timers[index] = new Timer({'index': index, 'title' : title, 'last_time' : 0, 'time' : 0, 'status' : 0});
@@ -93,20 +127,18 @@ function App($, Timers, Template, xmsgbox, timers) {
         }
     );
     
+    /* on init append timers to the apps DOM element */
     for(var index in timers) {
         var timer = timers[index] = new Timer(timers[index]),
-            tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : timer.title}),
-            current_time = new Date().getTime()
+            tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : timer.title, 'time' : timer.time})
             ;
-        if (timers.status == 1) {
-            timer.time += Math.floor((current_time - timer.last_time) / 1000);    
-        }
-        
         $items.append(tpl);
     }
     
+    /* bind actions to the timer DOM elements */
     bindTimersActions();
     
+    /* update time for timers that are not playing (timer.status == 1) */
     var cycle = setInterval(loopTimers, '1000'); 
     
     function bindTimersActions() {
@@ -206,6 +238,7 @@ function App($, Timers, Template, xmsgbox, timers) {
         }
     }
     
+    /* function that is called every second */
     function loopTimers() {
         for(var index in timers) {
             if (timers[index] && timers[index].status  == 1) {
@@ -214,50 +247,20 @@ function App($, Timers, Template, xmsgbox, timers) {
             }
         }
     }
-    
-    function convertSeconds(s) {
-      var m = 0;
-      var h = 0;
-      var d = 0;
-      if (s >= 3600 * 24) {
-          d = parseInt(s / (3600 * 24));
-          s = parseInt(s % (3600 * 24));
-      }  
-      if (s >= 3600) {
-          h = parseInt(s / 3600);
-          s = parseInt(s % 3600);
-      }
-      if (s >= 60) {
-          m = parseInt(s / 60);
-          s = parseInt(s % 60);
-      }
-      if (d > 0) {
-        d = (d < 10 ? '0' + d : d) + (d > 1 ? ' days ' : ' day ');
-      }  
-      if (h > 0 || d) {
-        h = (h < 10 ? '0' + h : h) + ' : ';
-      }
-      if (m > 0 || h) {
-        m = (m < 10 ? '0' + m : m) + ' : ';
-      }
-      if (s > 0 || m) {
-        s = s < 10 ? '0' + s : s;
-      }
-      
-      return  (d > 0 || d.length > 0 ? d : '<span class="not_visible">00 days </span>')
-              + (h > 0 || h.length > 0 ? h : '00 : ')
-              + (m > 0 || m.length > 0 ? m : '00 : ')
-              + s;
-    }
 } 
 
+/* connect to the background script */
 var port = chrome.extension.connect({name: "togglPort"});
+
+/* send message to bg script to retrieve the saved timers from the local storage */
 chrome.extension.sendMessage('', {action: 'collect'});
 
+/* listen to messages from bg script */
 chrome.extension.onMessage.addListener( function(msg)
     {
         if (msg.action == 'init') {
-            App($, Timer, Template, new xmsgbox(), msg.data['timers']);
+            /* on receiving the init action the app starts */
+            App($, _$, new xmsgbox(), msg.data['timers']);
         } else if (msg.action == 'debug') {
             console.log('BG debug', msg);
         }
