@@ -1,6 +1,6 @@
 #xmsgbox{
-	position: absolute;
-	top: 25%;
+	position: fixed;
+	top: 35%;
 	left:25%;
 	width: 200px;
 	height: 60px;

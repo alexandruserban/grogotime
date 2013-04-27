@@ -71,14 +71,12 @@ function convertSeconds(s) {
           + s;
 }
 /* this will return the template that will be appended to the other items */
-function Template(init_data) {
-    var tpl = init_data.tpl.replace(/%index%/g, init_data.index);
-    if (init_data.time && init_data.time > 0) {
-        tpl = tpl.replace(/%time%/g, convertSeconds(init_data.time));
-    } else {
-        tpl = tpl.replace(/%time%/g, '');
-    }
-    return tpl.replace(/%title%/g, init_data.title);
+function Template(tpl, populating_data) {
+	for(to_replace in populating_data) {
+		tpl = tpl.replace(new RegExp('%' + to_replace + '%', 'g'), populating_data[to_replace]);
+	}
+	
+    return tpl;
 }
 /* a timer has these DOM elements that need action binding */
 function _timerDOMElements($, index) {
@@ -98,13 +96,13 @@ function _timerDOMElements($, index) {
 
 function App($, _$, xmsgbox, timers) {
     /* the Array of DOM elements of each timer */
-    var timer_DOM_elements = [];
-    var $items          = $('toggl_items');
-    var $add_item       = $('toggl_add_item');
-    var $add_title      = $('toogl_input_title');   
-    var $close_toggl    = $('toggl_close');
-    var $closeToggl = $('toggl_close');
-    var new_item_html   = $('toggl_empty_item').html();
+    var timer_DOM_elements 		= [];
+    var $items          		= $('toggl_items');
+    var $add_item       		= $('toggl_add_item');
+    var $add_title      		= $('toogl_input_title');   
+    var $close_toggl    		= $('toggl_close');
+    var $closeToggl 			= $('toggl_close');
+    var new_item_html   		= $('toggl_empty_item').html();
     
     /* close app window */
     $closeToggl.on('click', function (e) {
@@ -116,7 +114,7 @@ function App($, _$, xmsgbox, timers) {
         {
             var index = parseInt(_$.array.lastIndex(timers)) + 1;
             var title = $add_title.val();
-            var tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : title, 'time' : 0});
+            var tpl = Template(new_item_html, {'index' : index, 'title' : title, 'time' : ''});
             
             $items.append(tpl);
             timers[index] = new Timer({'index': index, 'title' : title, 'last_time' : 0, 'time' : 0, 'status' : 0});
@@ -130,9 +128,9 @@ function App($, _$, xmsgbox, timers) {
     /* on init append timers to the apps DOM element */
     for(var index in timers) {
         var timer = timers[index] = new Timer(timers[index]),
-            tpl = Template({'tpl' : new_item_html, 'index' : index, 'title' : timer.title, 'time' : timer.time})
-            ;
-        $items.append(tpl);
+            tpl = Template(new_item_html, {'index' : index, 'title' : timer.title, 'time' : timer.time > 0 ? convertSeconds(timer.time) : ''});
+        
+		$items.append(tpl);
     }
     
     /* bind actions to the timer DOM elements */
