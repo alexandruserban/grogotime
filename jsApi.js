@@ -167,7 +167,31 @@ function $ (EL_ID) {
             
             return realKids;
         },
-
+        
+        css: function (props) {
+            if (typeof props == 'object') {
+                for (var prop_name in props) {
+                    this.DOM_EL.style[prop_name] = props[prop_name];
+                }
+            } else if (typeof props == 'string') {
+                return this.DOM_EL.style[props];
+            }
+            
+            return this;
+        },
+        
+        getOffset : function () {
+            var _x = 0;
+            var _y = 0;
+            var el = this.DOM_EL;
+            while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+                _x += el.offsetLeft - el.scrollLeft;
+                _y += el.offsetTop - el.scrollTop;
+                el = el.offsetParent;
+            }
+            return { top: _y, left: _x };
+        },
+        
         toggle: function (func_1, func_2)    {
             var self = this;
 

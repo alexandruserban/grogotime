@@ -51,33 +51,6 @@ body{
   padding: 0;
   margin: 0;
 }
-#toggl_items li {
-	width: 500px;
-	display: inline-block;
-	/*border:1px solid #93DFFC; 
-	background:#E2F7FE;*/
-	/*border:1px solid #3CABBF; 
-    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.2),0 1px 2px rgba(0,0,0,.05);
-	background:#7CC8D6;*/
-	border-radius:5px;
-	line-height: 30px;
-	margin-top: 5px;
-	color: #fff;
-	text-shadow: 1px 1px #024159;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-    background-color: #27C5DB;
-    background-image: -moz-linear-gradient(top,#19C8E0,#06A6BD);
-    background-image: -webkit-gradient(linear,0 0,0 100%,from(#19C8E0),to(#06A6BD));
-    background-image: -webkit-linear-gradient(top,#19C8E0,#06A6BD);
-    background-image: -o-linear-gradient(top,#19C8E0,#06A6BD);
-    background-image: linear-gradient(to bottom,#4DC5D6,#06A6BD);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#F0B448',endColorstr='#C9922E',GradientType=0);
-    border-color: #06A6BD #06A6BD #028DA1;
-    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-}
 #toggl_items li .toggl_action{
 	vertical-align: middle;
     height: 20px;
@@ -96,9 +69,7 @@ body{
 	width: 120px;
 	/*padding: 2px 2px 2px 0;*/
 }
-#toggl_items li:hover{
-    background: #7ECBD6;
-}
+
 #toggl_items li .toggl_time {	
 	width: 160px;
     text-align: center;
@@ -115,8 +86,7 @@ body{
 
 #toggl_items li .toggl_text {
     height: 200px;
-    margin-top: 5px;
-    padding: 3px;
+    padding-top: 5px;
 }
 
 #toggl_items li .toggl_text textarea {
