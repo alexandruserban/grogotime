@@ -1,11 +1,7 @@
 #xmsgbox{
-<<<<<<< HEAD
-	position: absolute;
-=======
 	position: fixed;
 	top: 35%;
 	left:25%;
->>>>>>> 2dc7ae91cfa302cc168af8371b5975dc1e088993
 	width: 200px;
 	height: 60px;
 	background: #fff;
