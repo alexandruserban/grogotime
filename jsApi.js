@@ -2,10 +2,10 @@
 function $ (EL_ID) {
     var domEl;
 
-    if (typeof EL_ID == 'object') {
+    if (typeof EL_ID === 'object') {
         domEl = EL_ID;
     } else {
-        domEl = document.getElementById(EL_ID.replace(/#/,''))
+        domEl = document.getElementById(EL_ID.replace(/#/,''));
     }
     
     if (!domEl) {
@@ -101,7 +101,7 @@ function $ (EL_ID) {
         },
 
         val : function (val) {
-            if (typeof val == 'undefined') {
+            if (typeof val === 'undefined') {
                 return this.DOM_EL.value;
             } else {
                 this.DOM_EL.value = val;
@@ -120,7 +120,7 @@ function $ (EL_ID) {
 
         removeClass : function (cls) {
             if (this.hasClass(cls)) {
-                if (this.DOM_EL.className == cls) {
+                if (this.DOM_EL.className === cls) {
                     this.DOM_EL.className = '';
                 } else {
                     this.DOM_EL.className = this.DOM_EL.className.replace(new RegExp(cls + ' ','g'), '')
@@ -144,11 +144,11 @@ function $ (EL_ID) {
             }
 
             return this;
-        }.call(this, cls)},
+        }.call(this, cls);},
 
         hasClass : function (cls) {
-            return ((this.DOM_EL.className.indexOf(cls + ' ') == -1)
-                    && (this.DOM_EL.className.indexOf(' ' + cls) == -1)
+            return ((this.DOM_EL.className.indexOf(cls + ' ') === -1)
+                    && (this.DOM_EL.className.indexOf(' ' + cls) === -1)
                     && this.DOM_EL.className !== cls)
                     ? false : true;
         },
@@ -159,7 +159,7 @@ function $ (EL_ID) {
             var i = 0;
             while (i < kids) {
                 //console.log('DOM EL', this.DOM_EL.childNodes[i]);
-                if(this.DOM_EL.childNodes[i].nodeType != 3){
+                if(this.DOM_EL.childNodes[i].nodeType !== 3){
                     realKids++;
                 }
                 i++;
@@ -169,11 +169,11 @@ function $ (EL_ID) {
         },
         
         css: function (props) {
-            if (typeof props == 'object') {
+            if (typeof props === 'object') {
                 for (var prop_name in props) {
                     this.DOM_EL.style[prop_name] = props[prop_name];
                 }
-            } else if (typeof props == 'string') {
+            } else if (typeof props === 'string') {
                 return this.DOM_EL.style[props];
             }
             
@@ -203,7 +203,7 @@ function $ (EL_ID) {
                 return func_2.apply(self, arguments);
             }
         }
-    }
+    };
 }
 /* object for help */
 var _$ = {
@@ -212,7 +212,7 @@ var _$ = {
                         return key ? key : -1;
                 }
     }
-}
+};
 
 
 

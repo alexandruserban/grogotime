@@ -10,14 +10,14 @@ function saveToStorage() {
     var newIndex = 0;
 
     for(var index in timers) {
-        if (timers[index] != null) {
+        if (timers[index] !== null) {
             newTimers[newIndex] = timers[index];
             timers[index].index = newIndex++;
         }
     }
     newIndex = 0;
     for(var index in archive) {
-        if (archive[index] != null) {
+        if (archive[index] !== null) {
             newArchive[newIndex] = archive[index];
             archive[index].index = newIndex++;
         }
@@ -34,19 +34,19 @@ chrome.extension.onConnect.addListener(function(port) {
 });
 
 chrome.extension.onMessage.addListener(function(msg) {
-	if (msg.action == 'store') {
+	if (msg.action === 'store') {
 		timers = msg.timers;     
         //chrome.extension.sendMessage('', {'action' : 'debug', 'data' : timers});
-	} else if (msg.action == 'collect') {
+	} else if (msg.action === 'collect') {
             chromelocalStorage.get('timers', function (saved) {
             //chromelocalStorage.set({timers : {active : [], archived : []}});
-            if (typeof saved.timers == 'object') {
+            if (typeof saved.timers === 'object') {
                 var savedTimers = saved.timers;
-                STORAGE_DATA['timers'] = typeof savedTimers.active != 'undefined' ? savedTimers.active : new Array();
-                STORAGE_DATA['timers_archive'] = typeof savedTimers.archived != 'undefined' ? savedTimers.archived : new Array();
+                STORAGE_DATA['timers'] = typeof savedTimers.active !== 'undefined' ? savedTimers.active : new Array();
+                STORAGE_DATA['timers_archive'] = typeof savedTimers.archived !== 'undefined' ? savedTimers.archived : new Array();
             }
 
             chrome.extension.sendMessage('', {'action' : 'init', 'data' : STORAGE_DATA});
-        });
+            });
 	}
 });

@@ -7,33 +7,33 @@ function Timer(init_data) {
     for(var key in this.data) {
         this[this.data[key]] = init_data[this.data[key]];
     }
-    if (this.status == 1) {
+    if (this.status === 1) {
         this.time += Math.floor((this.current_time - this.last_time) / 1000);    
     }
     this.play = function () {
         this.status = 1;
         this.last_time = new Date().getTime();
-    }
+    };
     this.pause = function () {
         this.status = 0;
         this.last_time = 0;
-    }
+    };
     this.edit = function () {
         this.status = 2;
-    }
+    };
     this.save = function () {
         this.save = 3;
-    }
+    };
     this.delete = function () {
         this.status = -1;
-    }
+    };
     this.export = function () {
         for(var key in this.data) {
             this.export_data[this.data[key]] = this[this.data[key]];
         }
         
         return this.export_data;
-    }
+    };
 }
 /* show elapsed time in a friendly way */
 function convertSeconds(s) {
@@ -94,21 +94,32 @@ function _timerDOMElements($, index) {
     this.$textarea      = $('#toggl_title_edit_' + index);
 }
 
-function App($, _$, xmsgbox, timers) {
+function App($, _$, xmsgbox, timers, fs) {
     /* the Array of DOM elements of each timer */
     var timer_DOM_elements 		= [];
     var $items          		= $('toggl_items');
     var $add_item       		= $('toggl_add_item');
     var $add_title      		= $('toogl_input_title');   
     var $close_toggl    		= $('toggl_close');
-    var $closeToggl 			= $('toggl_close');
     var new_item_html   		= $('toggl_empty_item').html();
-    
+    var $download_timers    		= $('download_timers');
     /* close app window */
-    $closeToggl.on('click', function (e) {
+    $close_toggl.on('click', function () {
         window.close();
     });
     
+    $download_timers.on('click', function () {
+        var csv = "Title, Status, Time \n";
+        for (var key in timers) {
+            csv += timers[key].title + ','+ (timers[key].status === 1 ? 'Playing' : 'Stopped') + ',' + convertSeconds(timers[key].time) + "\n";
+        }
+        csv = csv.replace(/(<([^>]+)>)/ig, "");
+        console.log('csv: ', csv);
+        fs.writeToFILE('grogotime.csv', csv);
+        fs.readFromFILE('grogotime.csv', function(file_url) {
+            $download_timers.attr('href', file_url).attr('download', 'grogotime_1.csv');
+        });
+    });
     /* add new item in app (an item is called a timer)*/
     $add_item.on('click', function (e)
         {
@@ -196,7 +207,7 @@ function App($, _$, xmsgbox, timers) {
                         DOM_elements = timer_DOM_elements[this.getNo()]
                         ;
                      
-                    if(timer.status == 1) {
+                    if(timer.status === 1) {
                         DOM_elements.$play.class('icon-play');
                         DOM_elements.$play.attr('title', chrome.i18n.getMessage('startMSG'));
                         timer.pause();
@@ -229,7 +240,7 @@ function App($, _$, xmsgbox, timers) {
                 }
             );
             
-            if (timer.status ==  1) {
+            if (timer.status ===  1) {
                 timer.status = 0;
                 DOM_elements.$play.trigger('click');
             }
@@ -239,7 +250,7 @@ function App($, _$, xmsgbox, timers) {
     /* function that is called every second */
     function loopTimers() {
         for(var index in timers) {
-            if (timers[index] && timers[index].status  == 1) {
+            if (timers[index] && timers[index].status  === 1) {
                 timers[index].time +=1;
                 timer_DOM_elements[index].$time.html(convertSeconds(timers[index].time));
             }
@@ -256,10 +267,10 @@ chrome.extension.sendMessage('', {action: 'collect'});
 /* listen to messages from bg script */
 chrome.extension.onMessage.addListener( function(msg)
     {
-        if (msg.action == 'init') {
+        if (msg.action === 'init') {
             /* on receiving the init action the app starts */
-            App($, _$, new xmsgbox(), msg.data['timers']);
-        } else if (msg.action == 'debug') {
+            App($, _$, new xmsgbox(), msg.data['timers'], new FS());
+        } else if (msg.action === 'debug') {
             console.log('BG debug', msg);
         }
     }
