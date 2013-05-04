@@ -16,7 +16,7 @@ function FS(loadedCallback){
                     file_entry.createWriter(function (writer) {
                         writer.write(new Blob([text], {type : 'plain/text'}));
                         writer.onwriteend = function (e) {
-                            if (typeof callbackFileWritten === 'object') {
+                            if (typeof callbackFileWritten === 'function') {
                                 callbackFileWritten.apply(this);
                             }
                         };
@@ -31,7 +31,9 @@ function FS(loadedCallback){
                     file_entry.file(function (file) {
                         var reader = new FileReader();
                         reader.onloadend = function (e) {
-                            callbackFileRead.apply(reader, [file_entry.toURL()]);
+                            if (typeof callbackFileRead === 'function') {
+                                callbackFileRead.apply(reader, [file_entry.toURL()]);
+                            }
                         };
                         reader.readAsText(file);
                     });

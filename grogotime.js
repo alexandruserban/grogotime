@@ -108,17 +108,35 @@ function App($, _$, xmsgbox, timers, fs) {
         window.close();
     });
     
-    $download_timers.on('click', function () {
-        var csv = "Title, Status, Time \n";
-        for (var key in timers) {
-            csv += timers[key].title + ','+ (timers[key].status === 1 ? 'Playing' : 'Stopped') + ',' + convertSeconds(timers[key].time) + "\n";
+    $download_timers.on('click', function (e) {
+        if (!this.hasClass('download_done')) {
+            var delimiter = ';';
+            var csv = "Title" + delimiter + 'Status' + delimiter + "Time \n";
+            for (var key in timers) {
+                csv += timers[key].title + delimiter + (timers[key].status === 1 ? 'Playing' : 'Stopped') + delimiter + convertSeconds(timers[key].time) + "\n";
+            }
+            csv = csv.replace(/(<([^>]+)>)/ig, "");
+            console.log('Begin', csv);
+            fs.writeToFILE('grogotime.csv', csv, function ()
+                {
+                    console.log('Written');
+                    fs.readFromFILE('grogotime.csv', function(file_url)
+                        {
+                            console.log('Read');
+                            if (!$download_timers.hasClass('download_done')) {
+                                $download_timers.attr('href', file_url).attr('download', 'grogotime_1.csv');
+                                $download_timers.addClass('download_done');
+                                $download_timers.trigger('click');
+                            } else {
+                                $download_timers.removeClass('download_done');
+                            }
+                        }
+                    );
+                }
+            );
+            
+            e.preventDefault();
         }
-        csv = csv.replace(/(<([^>]+)>)/ig, "");
-        console.log('csv: ', csv);
-        fs.writeToFILE('grogotime.csv', csv);
-        fs.readFromFILE('grogotime.csv', function(file_url) {
-            $download_timers.attr('href', file_url).attr('download', 'grogotime_1.csv');
-        });
     });
     /* add new item in app (an item is called a timer)*/
     $add_item.on('click', function (e)
