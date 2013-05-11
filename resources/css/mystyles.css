@@ -101,3 +101,12 @@ body{
 #toggl_empty_item{
     display: none;
 }
+.clean_small_box {
+	width: 28px;
+	border: solid 1px #999;
+	padding: 2px;
+	text-align: center;
+}
+#download_bar {
+	font-size: 10px;
+}

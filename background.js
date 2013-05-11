@@ -35,7 +35,8 @@ chrome.extension.onConnect.addListener(function(port) {
 
 chrome.extension.onMessage.addListener(function(msg) {
 	if (msg.action === 'store') {
-		timers = msg.timers;     
+		timers = msg.timers;   
+		saveToStorage();
         //chrome.extension.sendMessage('', {'action' : 'debug', 'data' : timers});
 	} else if (msg.action === 'collect') {
             chromelocalStorage.get('timers', function (saved) {

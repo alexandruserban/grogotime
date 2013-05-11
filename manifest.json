@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "GrogOTime",
     "description": "Keep track of your time. Make it worth your grog.",
-    "version": "1.21",
+    "version": "1.23",
     "default_locale": "en",
     "permissions": [
         "tabs",

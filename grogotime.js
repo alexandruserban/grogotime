@@ -102,41 +102,40 @@ function App($, _$, xmsgbox, timers, fs) {
     var $add_title      		= $('toogl_input_title');   
     var $close_toggl    		= $('toggl_close');
     var new_item_html   		= $('toggl_empty_item').html();
-    var $download_timers    		= $('download_timers');
+    var $download_timers    	= $('download_timers');
+	var $csv_delimiter			= $('csv_delimiter');	
     /* close app window */
     $close_toggl.on('click', function () {
         window.close();
     });
     
     $download_timers.on('click', function (e) {
-        if (!this.hasClass('download_done')) {
-            var delimiter = ';';
+            var delimiter = $csv_delimiter.val();
             var csv = "Title" + delimiter + 'Status' + delimiter + "Time \n";
-            for (var key in timers) {
-                csv += timers[key].title + delimiter + (timers[key].status === 1 ? 'Playing' : 'Stopped') + delimiter + convertSeconds(timers[key].time) + "\n";
-            }
-            csv = csv.replace(/(<([^>]+)>)/ig, "");
-            console.log('Begin', csv);
-            fs.writeToFILE('grogotime.csv', csv, function ()
-                {
-                    console.log('Written');
-                    fs.readFromFILE('grogotime.csv', function(file_url)
-                        {
-                            console.log('Read');
-                            if (!$download_timers.hasClass('download_done')) {
-                                $download_timers.attr('href', file_url).attr('download', 'grogotime_1.csv');
-                                $download_timers.addClass('download_done');
-                                $download_timers.trigger('click');
-                            } else {
-                                $download_timers.removeClass('download_done');
-                            }
-                        }
-                    );
-                }
-            );
+			var now = new Date();
+			var file_name = now.getFullYear() + '_' + (now.getMonth() + 1) + '_' + now.getDate() + '.csv'; 
             
-            e.preventDefault();
-        }
+			for (var key in timers) {
+                csv += timers[key].title.replace(/(\n|\r\n)/g, ' ') + delimiter + (timers[key].status === 1 ? 'Playing' : 'Stopped') + delimiter + convertSeconds(timers[key].time) + "\n";
+            }
+			/* remove tgas */
+            csv = csv.replace(/(<([^>]+)>)/ig, "");
+			var file_url = window.webkitURL.createObjectURL(new Blob([csv], {type : 'plain/text'}));
+			$download_timers.attr('href', file_url).attr('download', file_name);
+			
+			/*fs.removeFILE(file_name, function () 
+				{
+					fs.writeToFILE(file_name, csv, function (file_url)
+						{
+							if (!$download_timers.hasClass('file_written')) {
+								$download_timers.attr('href', file_url).attr('download', file_name);
+								$download_timers.addClass('file_written');
+								$download_timers.trigger('click');
+							}
+						}
+					);
+				}
+			);*/
     });
     /* add new item in app (an item is called a timer)*/
     $add_item.on('click', function (e)
