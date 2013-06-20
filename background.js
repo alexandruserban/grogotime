@@ -1,4 +1,4 @@
-var chromelocalStorage = chrome.storage.local;
+var chromelocalStorage = chrome.storage.sync;
 var timers = new Array();
 var archive = new Array();
 var STORAGE_SPACE = 5 * 1024 * 1024;//5 MB
@@ -29,7 +29,7 @@ function saveToStorage() {
 
 chrome.extension.onConnect.addListener(function(port) {
     port.onDisconnect.addListener(function () { 
-        saveToStorage(); 
+//        saveToStorage();
     });
 });
 
