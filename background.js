@@ -4,7 +4,7 @@ var archive = new Array();
 var INIT = false;
 var STORAGE_SPACE = 5 * 1024 * 1024;//5 MB
 var STORAGE_DATA = {timers : [], timers_archive : []};
-/* testing pre-commit hook test */
+/* testing pre-commit hook testing */
 function saveToStorage() {
     var newTimers = new Array();
     var newArchive = new Array();
